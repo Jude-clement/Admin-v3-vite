@@ -2,27 +2,28 @@ import React, { useEffect, useState } from 'react';
 import api from '../api'; // Import the Axios instance
 
 const Dashboard = () => {
-  const [profile, setProfile] = useState(null); // State for profile data
-  const [roles, setRoles] = useState([]); // State for roles
-  const [permissions, setPermissions] = useState([]); // State for permissions
-  const [error, setError] = useState(''); // State for error handling
+  const [profile, setProfile] = useState(null);
+  const [roles, setRoles] = useState([]);
+  const [permissions, setPermissions] = useState([]);
+  const [error, setError] = useState('');
+  const [loading, setLoading] = useState(true); // Loading state
 
-  // Fetch profile data from the backend
   const fetchProfile = async () => {
     try {
       const response = await api.get('/profile');
       if (response.data.success) {
-        setProfile(response.data.user); // Set the user profile data
-        setRoles(response.data.roles); // Set the roles
-        setPermissions(response.data.permissions); // Set the permissions
+        setProfile(response.data.user);
+        setRoles(response.data.roles);
+        setPermissions(response.data.permissions);
       }
     } catch (err) {
       setError('Failed to fetch profile. Please try again.');
       console.error('Failed to fetch profile', err);
+    } finally {
+      setLoading(false); // Set loading to false once the request is completed
     }
   };
 
-  // Fetch profile data when the component mounts
   useEffect(() => {
     fetchProfile();
   }, []);
@@ -36,24 +37,31 @@ const Dashboard = () => {
         border: '1px solid #ddd',
         borderRadius: '8px',
         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-         backgroundColor: 'white'
+        backgroundColor: 'white',
+        transition: 'box-shadow 0.3s ease-in-out',
       }}
+      onMouseEnter={(e) => (e.currentTarget.style.boxShadow = '0 4px 8px rgba(0, 0, 0, 0.2)')}
+      onMouseLeave={(e) => (e.currentTarget.style.boxShadow = '0 2px 4px rgba(0, 0, 0, 0.1)')}
     >
-      {/* Display error if any */}
       {error && (
         <div style={{ color: '#721c24', backgroundColor: '#f8d7da', padding: '10px', borderRadius: '4px', marginBottom: '16px' }}>
           {error}
         </div>
       )}
 
-      {/* Display Profile Information */}
-      {profile && (
-        <div style={{ textAlign: 'left' }}>
-          <h3 style={{ margin: '0 0 16px 0', fontSize: '36px', color: '#333' }}>Hello {profile.username}!</h3>
-          <p style={{ margin: '0 0 8px 0', fontSize: '16px', color: '#555' }}>
-            <strong>Email : </strong> {profile.email}
-          </p>
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '20px' }}>
+          <div className="spinner" style={{ border: '4px solid #f3f3f3', borderTop: '4px solid #3498db', borderRadius: '50%', width: '40px', height: '40px', animation: 'spin 1s linear infinite', margin: 'auto' }}></div>
         </div>
+      ) : (
+        profile && (
+          <div style={{ textAlign: 'left' }}>
+            <h3 style={{ margin: '0 0 16px 0', fontSize: '36px', color: '#333' }}>Hello {profile.username}!</h3>
+            <p style={{ margin: '0 0 8px 0', fontSize: '16px', color: '#555' }}>
+              <strong>Email : </strong> {profile.email}
+            </p>
+          </div>
+        )
       )}
     </div>
   );

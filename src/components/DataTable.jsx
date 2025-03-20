@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Route, Routes } from 'react-router-dom';
 import Users from './Users';
-import '../../public/assets/dist/css/adminlte.min.css';
-import '../../plugins/fontawesome-free/css/all.min.css';
-import '../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css';
-import '../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css';
+// import '../../public/assets/dist/css/adminlte.min.css';
+// import '../../plugins/fontawesome-free/css/all.min.css';
+// import '../../plugins/datatables-bs4/css/dataTables.bootstrap4.min.css';
+// import '../../plugins/datatables-responsive/css/responsive.bootstrap4.min.css';
 import Dashboard from './Dashboard';
 import { useNavigate } from 'react-router-dom';
 import api from '../api'; // Import the Axios instance

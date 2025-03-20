@@ -1,8 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense } from 'react';
 import api from '../api'; // Import the Axios instance
-import CreateUserModal from './CreateUserModal '; // Import the CreateUserModal component
-import EditUserModal from './EditUserModal'; // Import the EditUserModal component
-import DeleteUserModal from './DeleteUserModal'; // Import the DeleteUserModal component
+
+// Lazy load the modal components
+const CreateUserModal = React.lazy(() => import('./CreateUserModal '));
+const EditUserModal = React.lazy(() => import('./EditUserModal'));
+const DeleteUserModal = React.lazy(() => import('./DeleteUserModal'));
 
 const Users = () => {
   const [users, setUsers] = useState([]);
@@ -181,28 +183,34 @@ const Users = () => {
 
       {/* Create User Modal */}
       {showCreateModal && (
-        <CreateUserModal
-          onClose={() => setShowCreateModal(false)}
-          onSubmit={handleCreate}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <CreateUserModal
+            onClose={() => setShowCreateModal(false)}
+            onSubmit={handleCreate}
+          />
+        </Suspense>
       )}
 
       {/* Edit User Modal */}
       {showEditModal && (
-        <EditUserModal
-          user={selectedUser}
-          onClose={() => setShowEditModal(false)}
-          onSubmit={handleEdit}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <EditUserModal
+            user={selectedUser}
+            onClose={() => setShowEditModal(false)}
+            onSubmit={handleEdit}
+          />
+        </Suspense>
       )}
 
       {/* Delete User Modal */}
       {showDeleteModal && (
-        <DeleteUserModal
-          user={selectedUser}
-          onClose={() => setShowDeleteModal(false)}
-          onDelete={handleDelete}
-        />
+        <Suspense fallback={<div>Loading...</div>}>
+          <DeleteUserModal
+            user={selectedUser}
+            onClose={() => setShowDeleteModal(false)}
+            onDelete={handleDelete}
+          />
+        </Suspense>
       )}
     </div>
   );
